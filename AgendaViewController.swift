@@ -20,11 +20,18 @@ class AgendaViewController: UIViewController {
             print("erro ao deslogar")
         }
     }
+    
+    @IBAction func SwitchWrite(_ sender: UISegmentedControl) {
+    }
+    @IBAction func SwitchBlue(_ sender: UISegmentedControl) {
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-    }  
+    }
+    
 
    
     
