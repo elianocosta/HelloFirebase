@@ -7,12 +7,19 @@
 //
 
 import UIKit
-
+import Firebase
 class CadastroViewController: UIViewController {
 
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var senha: UITextField!
     @IBOutlet weak var senhaconfirma: UITextField!
+    
+    func exibirMensagem(titulo:String, mensagem:String){
+        let alerta = UIAlertController(title: titulo, message: mensagem, preferredStyle: .alert)
+        let acaoCancelar = UIAlertAction(title: "Cancelar", style:.cancel, 	handler: nil)
+        alerta.addAction(acaoCancelar)
+        present(alerta, animated: true, completion: nil)
+    }
     @IBAction func criarconta(_ sender: Any) {
         //Recuperar dados
         if let emailR =	self.email.text{
@@ -20,9 +27,23 @@ class CadastroViewController: UIViewController {
                 if let senhaconfirmarR = self.senhaconfirma.text{
                     //validar
                     if senhaR == senhaconfirmarR{
-                        print("senhas iguais podemos seguir")
+                        //criando a conta no firebase
+                        let autenticacao = Auth.auth()
+                        autenticacao.createUser(withEmail: emailR, password: senhaR) { (usuario, erro) in
+                            if erro == nil{
+                                if usuario == nil {
+                                    self.exibirMensagem(titulo: "usuario invalido", mensagem: "Problema ao realizar autenticacao")
+                                }else{
+                                     self.performSegue(withIdentifier: "cadastrosegue", sender: nil)
+                                }
+                            }else{
+                                let erroR = erro! as NSError
+                                print(erroR.userInfo["erro_name"])
+                                
+                            }
+                        }
                     }else{
-                        print("senhas diferentes tente novamente")
+                        self.exibirMensagem(titulo: "Dados incorretos", mensagem: "As senhas nao estao iguais")
                     }/*fim validacao senha */
                 }
             }
